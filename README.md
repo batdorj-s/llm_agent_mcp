@@ -4,8 +4,60 @@
 
 ---
 
-## Шаардлагатай зүйлс (Prerequisites)
+## Architecture (Системийн бүтэц)
 
+Системийн архитектурыг дараах схемээр харуулж байна:
+
+```mermaid
+graph TD
+    subgraph "Frontend Layer (Next.js)"
+        UI[Dashboard / Chat UI]
+        GraphVis[LangGraph Visualizer]
+    end
+
+    subgraph "Orchestration Layer (Node.js + LangGraph)"
+        Supervisor{Supervisor Agent Router}
+        State((Shared State Messages, Memory))
+    end
+
+    subgraph "Agentic Workers"
+        Finance[Finance Agent RAG Focused]
+        Tech[Tech Agent SQL + Self-Healing]
+    end
+
+    subgraph "Data & Tool Layer"
+        MCP[MCP Server Protocol Bridge]
+        SQL[(SQLite Enterprise Data)]
+        Vector[(ChromaDB Vector Store)]
+        E2B[E2B Sandbox Python Execution]
+    end
+
+    UI -->|User Query| Supervisor
+    Supervisor -->|Decision| State
+    State --> Finance
+    State --> Tech
+
+    Finance -->|Semantic Search| Vector
+    Tech -->|MCP Tools| MCP
+    MCP -->|Query| SQL
+    Tech -->|Code Gen| E2B
+
+    Tech -->|Error Feedback| Tech
+    Finance -->|Response| UI
+    Tech -->|Response| UI
+```
+
+### Инженерийн тайлбар
+
+1.  **Orchestration Layer:** LangGraph дээр суурилсан Supervisor загвар нь хэрэглэгчийн асуултыг контекстээс хамааран Finance эсвэл Tech агентууд руу ухаалгаар чиглүүлдэг.
+2.  **Agentic Workers:** Агентууд нь бие даасан шийдвэр гаргах чадвартай. TechAgent нь SQL код бичиж ажиллуулахдаа алдаа гарвал өөрөө засах (Self-healing) чадвартай.
+3.  **MCP (Model Context Protocol):** LLM-ийг өгөгдлийн эх сурвалжуудтай стандарт протоколоор холбож, аюулгүй байдал болон уян хатан байдлыг хангадаг.
+4.  **Data Layer:** Структурлаг өгөгдлийг SQLite-д, баримт бичгийг ChromaDB вектор санд хадгалж, RAG (Retrieval-Augmented Generation) технологиор хайлт хийдэг.
+
+---
+
+## Шаардлагатай зүйлс (Prerequisites)
+...
 Үүнийг ажиллуулахад дараах зүйлс таны компьютер дээр суусан байх шаардлагатай:
 1. **Node.js** (v18 эсвэл түүнээс дээш)
 2. **npm** (Node Package Manager)
