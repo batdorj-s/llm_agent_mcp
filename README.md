@@ -19,7 +19,7 @@
 
 ```env
 # 🔑 LLM API Түлхүүр (Gemini 2.5 Flash ашиглах тул Google API Key байхад хангалттай)
-GOOGLE_API_KEY=AIzaSyCpsjwnnRusiQ4HQBrVuac0DfHLHM0z8Q0
+GOOGLE_API_KEY=your_google_api_key_here
 
 # 🐍 Code Execution Sandbox (Код ажиллуулах хамгаалалттай орчин)
 E2B_API_KEY=your_e2b_api_key_here  # Байхгүй тохиолдолд систем Mock горимоор ажиллана
